@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
-import { Text, makeStyles } from 'theme';
+import { makeStyles, Text } from 'theme';
 
 type ButtonProps = {
   title?: string;
@@ -21,8 +21,8 @@ export const Button = forwardRef<View, ButtonProps>(({ title, ...touchableProps 
 const useStyles = makeStyles((theme) => ({
   button: {
     alignItems: 'center',
-    backgroundColor: theme.colors.purple,
-    borderRadius: theme.borderRadii.xl_24,
+    backgroundColor: theme.colors.green,
+    borderRadius: 24,
     elevation: 5,
     flexDirection: 'row',
     justifyContent: 'center',

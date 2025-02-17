@@ -21,12 +21,23 @@
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
+
+    "zzp": {
+      "image": "./assets/zamioculas_zamiifolia_plant.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "pop": {
+      "image": "./assets/plants_on_pots.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "loop": {
+      "image": "./assets/onboarding_carrousell.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },

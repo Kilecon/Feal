@@ -1,17 +1,14 @@
-import { Stack, Link, Redirect } from 'expo-router';
-
-import { Container } from '~/components/Container';
-import {Onboarding} from '~/screens/OnboardingScreen2';
+import { Stack } from 'expo-router';
+import { Onboarding } from '~/screens/onboarding';
+import { SafeAreaView } from 'react-native';
 
 export default function Home() {
   const isOnboarded = false;
-  
+
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
-      <Container>
-        <Onboarding/>
-      </Container>
-    </>
+      <Onboarding />
+    </SafeAreaView>
   );
 }

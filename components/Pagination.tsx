@@ -2,13 +2,12 @@ import React, { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
   Extrapolate,
-  SharedValue,
   interpolate,
+  SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
 import { theme } from '../constants/theme';
-import { type Data } from '../data/screens';
 
 type PaginationCompProps = {
   index: number;
@@ -25,22 +24,14 @@ const PaginationComp = memo(({ index, x, screenWidth }: PaginationCompProps) => 
   const animatedDotStyle = useAnimatedStyle(() => {
     const widthAnimation = interpolate(
       x.value,
-      [
-        (index - 1) * screenWidth,
-        index * screenWidth,
-        (index + 1) * screenWidth,
-      ],
+      [(index - 1) * screenWidth, index * screenWidth, (index + 1) * screenWidth],
       [DOT_SIZE, ACTIVE_DOT_SIZE, DOT_SIZE],
       Extrapolate.CLAMP
     );
 
     const opacityAnimation = interpolate(
       x.value,
-      [
-        (index - 1) * screenWidth,
-        index * screenWidth,
-        (index + 1) * screenWidth,
-      ],
+      [(index - 1) * screenWidth, index * screenWidth, (index + 1) * screenWidth],
       [DOT_OPACITY_INACTIVE, DOT_OPACITY_ACTIVE, DOT_OPACITY_INACTIVE],
       Extrapolate.CLAMP
     );
@@ -56,7 +47,7 @@ const PaginationComp = memo(({ index, x, screenWidth }: PaginationCompProps) => 
 });
 
 type PaginationProps = {
-  data: Data[];
+  data: React.JSX.Element[];
   x: SharedValue<number>;
   screenWidth: number;
 };
@@ -66,13 +57,8 @@ export function Pagination({ data, screenWidth, x }: PaginationProps) {
 
   return (
     <View style={styles.container}>
-      {data.map((item, index) => (
-        <PaginationComp
-          key={item.id}
-          index={index}
-          x={x}
-          screenWidth={screenWidth}
-        />
+      {data.map((_, index) => (
+        <PaginationComp key={index} index={index} x={x} screenWidth={screenWidth} />
       ))}
     </View>
   );

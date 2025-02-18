@@ -1,5 +1,7 @@
-import { Box, Text } from '~/theme';
-import { Image, View } from 'react-native';
+import { Box, Text } from "~/theme";
+import { Image, View } from "react-native";
+import { InformationCard } from "~/components/InformationCard";
+import { faDroplet, faSun } from "@fortawesome/free-solid-svg-icons";
 
 export default function ItemThird() {
   return (
@@ -15,17 +17,20 @@ export default function ItemThird() {
           justifyContent="center"
           flex={1}
           style={{ paddingHorizontal: 40 }}>
-          <Box backgroundColor="green" style={{ width: 100, height: 300 }}></Box>
+          <Box style={{ width: 100, height: 300 }} gap="sm_12" justifyContent="flex-end">
+            <InformationCard label="Humidity" color="green" icon={faDroplet} />
+            <InformationCard label="Light" color="orange" icon={faSun} />
+          </Box>
           <Image
-            source={require('~/assets/zamioculcas_zamiifolia_plant.png')}
+            source={require("~/assets/zamioculcas_zamiifolia_plant.png")}
             style={{
-              position: 'absolute',
+              position: "absolute",
               top: -20,
               right: 0,
-              resizeMode: 'contain',
+              resizeMode: "contain",
               height: 388,
               aspectRatio: 1,
-              alignSelf: 'flex-end',
+              alignSelf: "flex-end"
             }}
           />
         </Box>

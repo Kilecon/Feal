@@ -1,20 +1,16 @@
-import { FlatList, ViewToken } from 'react-native';
-import Animated, {
-  useAnimatedRef,
-  useAnimatedScrollHandler,
-  useSharedValue,
-} from 'react-native-reanimated';
-import { Pagination } from '~/components/Pagination';
-import ItemFirst from '~/components/renderItem/itemFirst';
-import ItemSecond from '~/components/renderItem/itemSecond';
-import ItemThird from '~/components/renderItem/itemThird';
-import { RenderItem } from '~/components/renderItem/renderItem';
-import { Box } from '~/theme';
-import { useState } from 'react';
-import { Button } from '~/components/Button';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { useRouter } from 'expo-router';
-import GradientBackground from '~/components/radiasBackground';
+import { FlatList, ViewToken } from "react-native";
+import Animated, { useAnimatedRef, useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
+import { Pagination } from "~/components/Pagination";
+import ItemFirst from "~/components/renderItem/itemFirst";
+import ItemSecond from "~/components/renderItem/itemSecond";
+import ItemThird from "~/components/renderItem/itemThird";
+import { RenderItem } from "~/components/renderItem/renderItem";
+import { Box } from "~/theme";
+import { useState } from "react";
+import { Button } from "~/components/Button";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "expo-router";
+import GradientBackground from "~/components/radiasBackground";
 
 export function Onboarding() {
   const router = useRouter();
@@ -30,17 +26,17 @@ export function Onboarding() {
   const onScroll = useAnimatedScrollHandler({
     onScroll: (event) => {
       x.value = event.contentOffset.x;
-    },
+    }
   });
 
-  const onboardPage = [<ItemFirst />, <ItemSecond />, <ItemThird />];
+  const onboardPage = [<ItemFirst flatListRef={flatListRef} />, <ItemSecond />, <ItemThird />];
 
   const handleNextScreen = () => {
     const isLastScreen = currentPage === onboardPage.length - 1;
     if (!isLastScreen) {
       flatListRef.current?.scrollToIndex({ index: currentPage + 1 });
     } else {
-      router.replace({ pathname: '/home' });
+      router.replace({ pathname: "/home" });
     }
   };
 
@@ -82,7 +78,7 @@ export function Onboarding() {
             <>
               <Button label="Previous" onPress={handleBack} solid={false}></Button>
               <Button
-                label={currentPage == onboardPage.length - 1 ? 'Get start' : 'Next'}
+                label={currentPage == onboardPage.length - 1 ? "Get start" : "Next"}
                 onPress={handleNextScreen}
                 icon={faArrowRight}></Button>
             </>

@@ -58,11 +58,12 @@ const theme = createTheme({
     large: {
       fontSize: 18,
     },
+    buttonLabel: { fontSize: 20, fontFamily: 'Georgia' },
     title: { fontSize: 24, fontWeight: 'bold', fontFamily: 'Georgia' },
     subtitle: { fontSize: 24, fontWeight: 'bold', fontFamily: 'Georgia', color: 'darkBlue' },
     extra_large: {
-      fontSize: 64,
-      fontWeight: 'bold',
+      fontSize: 48,
+      fontFamily: 'Georgia',
     },
     defaults: {
       fontFamily: 'Quicksand-Regular',

@@ -1,26 +1,30 @@
-import { FlatList, useWindowDimensions, ViewToken } from 'react-native';
+import { FlatList, ViewToken } from 'react-native';
 import Animated, {
   useAnimatedRef,
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
-
-import { Button } from '~/components/Button';
 import { Pagination } from '~/components/Pagination';
 import ItemFirst from '~/components/renderItem/itemFirst';
 import ItemSecond from '~/components/renderItem/itemSecond';
 import ItemThird from '~/components/renderItem/itemThird';
 import { RenderItem } from '~/components/renderItem/renderItem';
 import { Box } from '~/theme';
+import { useState } from 'react';
+import { Button } from '~/components/Button';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'expo-router';
+import GradientBackground from '~/components/radiasBackground';
 
 export function Onboarding() {
+  const router = useRouter();
   const flatListRef = useAnimatedRef<FlatList>();
 
-  const flatListIndex = useSharedValue(0);
+  const [currentPage, setCurrentPage] = useState(0);
   const x = useSharedValue(0);
 
   const onViewableItemsChanged = ({ viewableItems }: { viewableItems: ViewToken[] }) => {
-    flatListIndex.value = viewableItems[0].index ?? 0;
+    setCurrentPage(viewableItems[0].index ?? 0);
   };
 
   const onScroll = useAnimatedScrollHandler({
@@ -29,14 +33,30 @@ export function Onboarding() {
     },
   });
 
-  const test = [<ItemFirst />, <ItemSecond />, <ItemThird />];
+  const onboardPage = [<ItemFirst />, <ItemSecond />, <ItemThird />];
 
-  const { width: SCREEN_WIDTH } = useWindowDimensions();
+  const handleNextScreen = () => {
+    const isLastScreen = currentPage === onboardPage.length - 1;
+    if (!isLastScreen) {
+      flatListRef.current?.scrollToIndex({ index: currentPage + 1 });
+    } else {
+      router.replace({ pathname: '/home' });
+    }
+  };
+
+  const handleBack = () => {
+    const isFirstScreen = currentPage === 0;
+    if (!isFirstScreen) {
+      flatListRef.current?.scrollToIndex({ index: currentPage - 1 });
+    }
+  };
+
   return (
     <Box flex={1}>
+      <GradientBackground />
       <Animated.FlatList
         ref={flatListRef as any}
-        data={test}
+        data={onboardPage}
         keyExtractor={(_, index) => String(index)}
         renderItem={({ item, index }) => <RenderItem item={item} index={index} x={x} />}
         onScroll={onScroll}
@@ -49,9 +69,25 @@ export function Onboarding() {
         style={{ flex: 1 }}
       />
 
-      <Box flexDirection="row" alignItems="center" justifyContent="space-between" margin="ml_24">
-        <Pagination data={test} screenWidth={SCREEN_WIDTH} x={x} />
-        <Button flatListRef={flatListRef} flatListIndex={flatListIndex} dataLength={test.length} />
+      <Box
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+        height={45}
+        marginVertical="ml_24"
+        style={{ paddingHorizontal: 40 }}>
+        <Pagination pageNumber={onboardPage.length} currentPage={currentPage} />
+        <Box flexDirection="row" alignItems="center" justifyContent="center">
+          {currentPage != 0 && (
+            <>
+              <Button label="Previous" onPress={handleBack} solid={false}></Button>
+              <Button
+                label={currentPage == onboardPage.length - 1 ? 'Get start' : 'Next'}
+                onPress={handleNextScreen}
+                icon={faArrowRight}></Button>
+            </>
+          )}
+        </Box>
       </Box>
     </Box>
   );

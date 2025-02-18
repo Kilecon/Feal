@@ -1,13 +1,16 @@
-import { Link, Stack } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Stack } from 'expo-router';
 import { ScrollView } from 'react-native';
-import { Text } from 'theme';
+import { Text, useTheme } from 'theme';
 
-import { Button } from '~/components/Button';
 import { DetailsCard } from '~/components/DetailsCard';
+import { SearchBar } from '~/components/SearchBar';
 import { SectionTitle } from '~/components/SectionTitle';
 import { Box } from '~/theme';
 
 export default function Home() {
+  const theme = useTheme();
+
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
@@ -41,16 +44,18 @@ export default function Home() {
             <SectionTitle title="Add plant" />
           </Box>
 
-          <Box
-            backgroundColor="darkGreen"
-            flex={1}
-            borderTopLeftRadius="base"
-            borderTopRightRadius="base"
-            padding="m_16">
-            <Link href={{ pathname: '/details', params: { name: 'Dan' } }} asChild>
-              <Button title="Show Details" />
-            </Link>
-          </Box>
+          <LinearGradient
+            colors={[theme.colors.darkGreen, `${theme.colors.darkGreen}50`]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0.2, y: 1 }}
+            style={{
+              borderTopLeftRadius: theme.borderRadii.base,
+              borderTopRightRadius: theme.borderRadii.base,
+              padding: 16,
+              flex: 1,
+            }}>
+            <SearchBar placeholder="Search a plant" />
+          </LinearGradient>
         </Box>
       </Box>
     </>

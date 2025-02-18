@@ -13,6 +13,7 @@ const palette = {
   white: '#FFFFFF',
   black: '#000000',
   bgCard: '#FBFFF4',
+  bgInput: '#EAF3D6',
   orange: '#FBDFB8',
   green: '#C8DC9F',
   darkGreen: '#6C8437',

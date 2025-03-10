@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, ActivityIndicator, TextInput, StyleSheet } from "react-native";
+import { View, Text, FlatList, ActivityIndicator, TextInput, StyleSheet, Image } from "react-native";
 import axios from "axios";
 
-const API_KEY = "sk-7i6e67b4a68c8da1a8719";
+const API_KEY = "sk-7i6e67b4a68c8da1a8719"; // Replace with a secure storage method
 const BASE_URL = `https://perenual.com/api/v2/species-list?key=${API_KEY}`;
 
 interface Plant {
   id: number;
-  common_name: string;
+  common_name: string | null;
+  scientific_name: string[];
+  family: string | null;
+  default_image?: {
+    medium_url: string;
+  };
 }
 
 interface ApiResponse {
@@ -62,7 +67,7 @@ export const App: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {}
+      {/* Search Bar */}
       <TextInput
         style={styles.searchInput}
         placeholder="Search plants..."
@@ -72,15 +77,25 @@ export const App: React.FC = () => {
         onSubmitEditing={() => setSearchTerm(query)}
       />
 
-      {}
+      {/* Total Results */}
       <Text style={styles.header}>Total Results: {totalResults}</Text>
 
-      {}
+      {/* List of Plant Cards */}
       <FlatList
         data={data}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <Text style={styles.itemText}>{item.common_name || "Unknown"}</Text>
+          <View style={styles.card}>
+            <Image
+              source={{ uri: item.default_image?.medium_url || "https://via.placeholder.com/80" }}
+              style={styles.image}
+            />
+            <View style={styles.textContainer}>
+              <Text style={styles.commonName}>{item.common_name || "Unknown"}</Text>
+              <Text style={styles.scientificName}>{item.scientific_name?.join(", ") || "N/A"}</Text>
+              <Text style={styles.family}>Family: {item.family || "N/A"}</Text>
+            </View>
+          </View>
         )}
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
@@ -95,6 +110,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: "#f8f8f8",
   },
   searchInput: {
     height: 40,
@@ -103,14 +119,48 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     marginBottom: 10,
+    backgroundColor: "#fff",
   },
   header: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
   },
-  itemText: {
+  card: {
+    flexDirection: "row",
+    backgroundColor: "#fff",
+    padding: 10,
+    marginVertical: 8,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  image: {
+    width: 80,
+    height: 80,
+    borderRadius: 10,
+    marginRight: 10,
+  },
+  textContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  commonName: {
     fontSize: 16,
-    marginVertical: 5,
+    fontWeight: "bold",
+  },
+  scientificName: {
+    fontSize: 14,
+    fontStyle: "italic",
+    color: "#666",
+  },
+  family: {
+    fontSize: 12,
+    color: "#444",
   },
 });
+
+export default App;

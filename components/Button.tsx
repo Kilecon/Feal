@@ -1,38 +1,84 @@
-import { forwardRef } from 'react';
-import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
-import { Text, makeStyles } from 'theme';
+import { Pressable, View } from 'react-native';
+import { Text, theme } from '~/theme';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useEffect, useRef } from 'react';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type ButtonProps = {
-  title?: string;
-} & TouchableOpacityProps;
+  label: string;
+  onPress: () => void;
+  solid?: boolean;
+  icon?: IconProp | null;
+};
 
-export const Button = forwardRef<View, ButtonProps>(({ title, ...touchableProps }, ref) => {
-  const styles = useStyles();
+export function Button({ label, onPress, solid = true, icon }: ButtonProps) {
+  const width = useSharedValue(0);
+  const measureRef = useRef<View>(null);
+
+  useEffect(() => {
+    if (measureRef.current) {
+      measureRef.current.measure((x, y, w) => {
+        width.value = withTiming(w, { duration: 200 });
+      });
+    }
+  }, [label]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    width: width.value > 0 ? width.value : undefined,
+  }));
 
   return (
-    <TouchableOpacity ref={ref} {...touchableProps} style={[styles.button, touchableProps.style]}>
-      <Text variant="body" textAlign="center" color="white" fontWeight="600">
-        {title}
-      </Text>
-    </TouchableOpacity>
-  );
-});
+    <>
+      {/* Mesure du bouton sans l'afficher */}
+      <View
+        ref={measureRef}
+        style={[
+          {
+            position: 'absolute',
+            opacity: 0,
+            backgroundColor: solid ? theme.colors.darkBlue : 'transparent',
+            paddingHorizontal: theme.spacing.ml_24,
+            paddingVertical: theme.spacing.sm_12,
+            alignItems: 'center',
+            gap: theme.spacing.sm_12,
+            flexDirection: 'row',
+            alignSelf: 'flex-start',
+            borderRadius: theme.borderRadii.base,
+            overflow: 'hidden',
+          },
+          animatedStyle,
+        ]}>
+        <Text variant="buttonLabel" color={solid ? 'white' : 'darkBlue'} style={{ lineHeight: 21 }}>
+          {label}
+        </Text>
+        {icon && <FontAwesomeIcon icon={icon} color={solid ? 'white' : theme.colors.darkBlue} />}
+      </View>
 
-const useStyles = makeStyles((theme) => ({
-  button: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.purple,
-    borderRadius: theme.borderRadii.xl_24,
-    elevation: 5,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    padding: theme.spacing.m_16,
-    shadowColor: theme.colors.black,
-    shadowOffset: {
-      height: 2,
-      width: 0,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-}));
+      {/* Bouton animé */}
+      <AnimatedPressable
+        style={[
+          {
+            backgroundColor: solid ? theme.colors.darkBlue : 'transparent',
+            paddingHorizontal: theme.spacing.ml_24,
+            paddingVertical: theme.spacing.sm_12,
+            alignItems: 'center',
+            gap: theme.spacing.sm_12,
+            flexDirection: 'row',
+            alignSelf: 'flex-start',
+            borderRadius: theme.borderRadii.base,
+            overflow: 'hidden',
+          },
+          animatedStyle,
+        ]}
+        onPress={onPress}>
+        <Text variant="buttonLabel" color={solid ? 'white' : 'darkBlue'} style={{ lineHeight: 21 }}>
+          {label}
+        </Text>
+        {icon && <FontAwesomeIcon icon={icon} color={solid ? 'white' : theme.colors.darkBlue} />}
+      </AnimatedPressable>
+    </>
+  );
+}

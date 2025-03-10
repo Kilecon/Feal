@@ -6,12 +6,18 @@ type NamedStyles<T> = {
 };
 
 const palette = {
+  background: '#FFFFFF',
   gray: '#808080',
   blue: '#007AFF',
   darkGray: '#38434D',
   white: '#FFFFFF',
   black: '#000000',
-  purple: '#6366F1',
+  bgCard: '#FBFFF4',
+  bgInput: '#EAF3D6',
+  orange: '#FBDFB8',
+  green: '#C8DC9F',
+  darkGreen: '#6C8437',
+  darkBlue: '#0A1B3D',
 };
 
 const theme = createTheme({
@@ -28,25 +34,39 @@ const theme = createTheme({
     xl_64: 64,
   },
   borderRadii: {
-    s_3: 3,
-    m_6: 6,
-    l_12: 12,
-    xl_24: 24,
+    base: 24,
   },
   textVariants: {
     body: {
       fontSize: 16,
     },
-    title: { fontSize: 20, fontWeight: 'bold' },
-    large: {
-      fontSize: 36,
+    small: {
+      fontSize: 14,
     },
+    smallSB: {
+      fontSize: 14,
+      fontFamily: 'Quicksand-SemiBold',
+    },
+    smallB: {
+      fontSize: 14,
+      fontFamily: 'Quicksand-Bold',
+    },
+    medium: {
+      fontSize: 16,
+      fontFamily: 'Quicksand-Regular',
+    },
+    large: {
+      fontSize: 18,
+    },
+    buttonLabel: { fontSize: 20, fontFamily: 'Georgia' },
+    title: { fontSize: 24, fontWeight: 'bold', fontFamily: 'Georgia' },
+    subtitle: { fontSize: 24, fontWeight: 'bold', fontFamily: 'Georgia', color: 'darkBlue' },
     extra_large: {
-      fontSize: 64,
-      fontWeight: 'bold',
+      fontSize: 48,
+      fontFamily: 'Georgia',
     },
     defaults: {
-      // We can define a default text variant here.
+      fontFamily: 'Quicksand-Regular',
     },
   },
 });

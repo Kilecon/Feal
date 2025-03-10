@@ -1,19 +1,15 @@
-import { Stack, Link } from 'expo-router';
-
-import { Button } from '~/components/Button';
-import { Container } from '~/components/Container';
-import { ScreenContent } from '~/components/ScreenContent';
+import { Stack } from 'expo-router';
+import { Onboarding } from '~/screens/onboarding';
+import { SafeAreaView } from 'react-native';
+import { theme } from '~/theme';
 
 export default function Home() {
+  const isOnboarded = false;
+
   return (
-    <>
-      <Stack.Screen options={{ title: 'Home' }} />
-      <Container>
-        <ScreenContent path="app/index.tsx" title="Home" />
-        <Link href={{ pathname: '/details', params: { name: 'Dan' } }} asChild>
-          <Button title="Show Details" />
-        </Link>
-      </Container>
-    </>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <Stack.Screen options={{ title: 'Home', headerShown: false }} />
+      <Onboarding />
+    </SafeAreaView>
   );
 }

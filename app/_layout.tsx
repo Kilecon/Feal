@@ -2,6 +2,7 @@ import { ThemeProvider } from '@shopify/restyle';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { theme } from 'theme';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export default function Layout() {
   useFonts({
@@ -10,10 +11,15 @@ export default function Layout() {
     'Quicksand-SemiBold': require('~/assets/fonts/Quicksand-SemiBold.ttf'),
     'Quicksand-Bold': require('~/assets/fonts/Quicksand-Bold.ttf'),
   });
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: 2 } },
+  });
 
   return (
-    <ThemeProvider theme={theme}>
-      <Stack />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <Stack />
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

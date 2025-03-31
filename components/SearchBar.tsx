@@ -6,9 +6,10 @@ import { Box, useTheme } from '~/theme';
 
 type SearchBarProps = {
   placeholder: string;
+  onSearchChange: (value: string) => void;
 };
 
-export const SearchBar = ({ placeholder }: SearchBarProps) => {
+export const SearchBar = ({ placeholder, onSearchChange }: SearchBarProps) => {
   const theme = useTheme();
   return (
     <Box
@@ -21,6 +22,8 @@ export const SearchBar = ({ placeholder }: SearchBarProps) => {
       <TextInput
         placeholderTextColor={`${theme.colors.darkBlue}80`}
         placeholder={placeholder}
+        onChangeText={onSearchChange}
+        returnKeyType="search"
         style={{
           flex: 1,
           backgroundColor: 'transparent',

@@ -35,6 +35,7 @@ const theme = createTheme({
   },
   borderRadii: {
     base: 24,
+    medium: 20,
   },
   textVariants: {
     body: {
@@ -54,6 +55,10 @@ const theme = createTheme({
     medium: {
       fontSize: 16,
       fontFamily: 'Quicksand-Regular',
+    },
+    mediumSB: {
+      fontSize: 16,
+      fontFamily: 'Quicksand-SemiBold',
     },
     large: {
       fontSize: 18,

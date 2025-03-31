@@ -6,7 +6,7 @@ type SectionTitleProps = {
 
 export const SectionTitle = ({ title }: SectionTitleProps) => {
   return (
-    <Box alignItems="flex-start">
+    <Box alignItems="flex-start" paddingHorizontal="ml_24">
       <Text variant="subtitle">{title}</Text>
     </Box>
   );

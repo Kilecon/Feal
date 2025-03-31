@@ -16,11 +16,10 @@ import { Button } from '~/components/Button';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'expo-router';
 import GradientBackground from '~/components/radiasBackground';
-import {useAsyncStorage} from "@react-native-async-storage/async-storage"
-
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 
 export function Onboarding() {
-  const {setItem} = useAsyncStorage("isOnboarded")
+  const { setItem } = useAsyncStorage('isOnboarded');
   const router = useRouter();
   const flatListRef = useAnimatedRef<FlatList>();
 
@@ -88,7 +87,7 @@ export function Onboarding() {
             <Button
               label={currentPage == onboardPage.length - 1 ? 'Get start' : 'Next'}
               onPress={handleNextScreen}
-              icon={faArrowRight} ></Button>
+              icon={faArrowRight}></Button>
           </Box>
         )}
       </Box>

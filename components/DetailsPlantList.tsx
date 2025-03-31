@@ -26,7 +26,7 @@ export const DetailsPlantList = () => {
         paddingTop: 36,
       }}>
       {localPlants.map((plant: LocalPlant) => (
-        <DetailsCard localPlant={plant} />
+        <DetailsCard localPlant={plant} key={plant.id} />
       ))}
     </ScrollView>
   );

@@ -1,25 +1,33 @@
 import { faDroplet, faSun } from '@fortawesome/free-solid-svg-icons';
 import { useQuery } from '@tanstack/react-query';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, Image, SafeAreaView, ScrollView } from 'react-native';
+import uuid from 'react-native-uuid';
 
+import { Button } from '~/components/Button';
 import { ChipsList, ChipsTipsKeys } from '~/components/ChipsList';
 import { Header } from '~/components/Header';
 import { InformationCard } from '~/components/InformationCard';
 import GradientBackground from '~/components/radiasBackground';
+import useStorage from '~/core/storage';
 import { fetchPlant } from '~/lib/api';
 import { Box, Text, theme } from '~/theme';
 import { Plant } from '~/types/api.type';
+import { LocalPlant } from '~/types/storage.type';
 
 export default function Detail() {
   const params = useLocalSearchParams();
   const { plantId, localId } = params;
 
+  const [localPlants, setLocalPlants] = useStorage<LocalPlant[]>('localPlants');
+  const localPlant = localPlants?.find((p) => p.id === localId);
+
   const { isPending, error, data } = useQuery({
     queryKey: ['plantDetails'],
     queryFn: async () => fetchPlant(parseInt(plantId as string, 10)),
   });
+  const router = useRouter();
 
   if (isPending) {
     return (
@@ -68,14 +76,37 @@ export default function Detail() {
               paddingVertical="l_32"
               paddingHorizontal="ml_24"
               alignItems="center">
-              <Box flexDirection="column" alignItems="center" gap="s_8">
-                <Box flexDirection="row">
-                  <InformationCard label="Humidity" color="green" icon={faDroplet} pourcent={72} />
+              {localPlant && (
+                <Box flexDirection="column" alignItems="center" gap="s_8">
+                  <Box flexDirection="row">
+                    <InformationCard
+                      label="Humidity"
+                      color="green"
+                      icon={faDroplet}
+                      pourcent={72}
+                    />
+                  </Box>
+                  <Box style={{ width: '100%' }}>
+                    <InformationCard label="Light" color="orange" icon={faSun} pourcent={10} />
+                  </Box>
                 </Box>
-                <Box style={{ width: '100%' }}>
-                  <InformationCard label="Light" color="orange" icon={faSun} pourcent={10} />
-                </Box>
-              </Box>
+              )}
+              {!localPlant && (
+                <Button
+                  label="Save"
+                  onPress={() => {
+                    setLocalPlants([
+                      ...(localPlants ?? []),
+                      {
+                        id: uuid.v4(),
+                        api_id: data?.id,
+                        name: data?.common_name ?? '',
+                      },
+                    ]);
+                    if (router.canGoBack()) router.back();
+                  }}
+                />
+              )}
               <Image
                 source={{
                   uri: `${process.env.EXPO_PUBLIC_IMAGES_SRC}all_${data!.common_name!.split(' ')[data!.common_name!.split(' ').length - 1].toLowerCase()}.png?raw=true`,

@@ -6,12 +6,12 @@ import { Onboarding } from '~/screens/onboarding';
 import { theme } from '~/theme';
 
 export default function Home() {
-  const [isOnboarded] = useStorage('isOnboarded');
+  const [isOnboarded] = useStorage<boolean>('isOnboarded');
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <Stack.Screen options={{ title: 'Home', headerShown: false }} />
-      {isOnboarded ? <Onboarding /> : <Redirect href="/home" />}
+      <Stack.Screen options={{ headerShown: false }} />
+      {isOnboarded == null || !isOnboarded ? <Onboarding /> : <Redirect href="/home" />}
     </SafeAreaView>
   );
 }

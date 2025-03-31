@@ -1,25 +1,25 @@
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import { FlatList, ViewToken } from 'react-native';
 import Animated, {
   useAnimatedRef,
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
+
+import { Button } from '~/components/Button';
 import { Pagination } from '~/components/Pagination';
+import GradientBackground from '~/components/radiasBackground';
 import ItemFirst from '~/components/renderItem/itemFirst';
 import ItemSecond from '~/components/renderItem/itemSecond';
 import ItemThird from '~/components/renderItem/itemThird';
 import { RenderItem } from '~/components/renderItem/renderItem';
+import useStorage from '~/core/storage';
 import { Box } from '~/theme';
-import { useState } from 'react';
-import { Button } from '~/components/Button';
-
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { useRouter } from 'expo-router';
-import GradientBackground from '~/components/radiasBackground';
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 
 export function Onboarding() {
-  const { setItem } = useAsyncStorage('isOnboarded');
+  const [isOnboarded, setIsOnboarded] = useStorage<boolean>('isOnboarded');
   const router = useRouter();
   const flatListRef = useAnimatedRef<FlatList>();
 
@@ -38,12 +38,12 @@ export function Onboarding() {
 
   const onboardPage = [<ItemFirst flatListRef={flatListRef} />, <ItemSecond />, <ItemThird />];
 
-  const handleNextScreen = () => {
+  const handleNextScreen = async () => {
     const isLastScreen = currentPage === onboardPage.length - 1;
     if (!isLastScreen) {
       flatListRef.current?.scrollToIndex({ index: currentPage + 1 });
     } else {
-      setItem('true');
+      await setIsOnboarded(true);
       router.replace({ pathname: '/home' });
     }
   };
@@ -83,11 +83,12 @@ export function Onboarding() {
         <Pagination pageNumber={onboardPage.length} currentPage={currentPage} />
         {currentPage != 0 && (
           <Box flexDirection="row" alignItems="center" justifyContent="center">
-            <Button label="Previous" onPress={handleBack} solid={false}></Button>
+            <Button label="Previous" onPress={handleBack} solid={false} />
             <Button
               label={currentPage == onboardPage.length - 1 ? 'Get start' : 'Next'}
               onPress={handleNextScreen}
-              icon={faArrowRight}></Button>
+              icon={faArrowRight}
+            />
           </Box>
         )}
       </Box>

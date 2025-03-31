@@ -1,10 +1,10 @@
 import { Stack } from 'expo-router';
 import React from 'react';
-import { Text } from 'theme';
-import { SectionTitle } from '~/components/SectionTitle';
-import { Box } from '~/theme';
-import { DetailsPlantList } from '~/components/DetailsPlantList';
+
 import { AddPlantList } from '~/components/AddPlantList';
+import { DetailsPlantList } from '~/components/DetailsPlantList';
+import { SectionTitle } from '~/components/SectionTitle';
+import { Box, Text } from '~/theme';
 
 export default function Home() {
   return (

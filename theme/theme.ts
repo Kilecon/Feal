@@ -18,6 +18,8 @@ const palette = {
   green: '#C8DC9F',
   darkGreen: '#6C8437',
   darkBlue: '#0A1B3D',
+  pink: '#F4AFED',
+  red: '#F4AFAF',
 };
 
 const theme = createTheme({
@@ -36,6 +38,7 @@ const theme = createTheme({
   borderRadii: {
     base: 24,
     medium: 20,
+    small: 10,
   },
   textVariants: {
     body: {
@@ -65,6 +68,12 @@ const theme = createTheme({
     },
     buttonLabel: { fontSize: 20, fontFamily: 'Georgia' },
     title: { fontSize: 24, fontWeight: 'bold', fontFamily: 'Georgia' },
+    subtitleRegular: {
+      fontSize: 24,
+      fontWeight: 500,
+      fontFamily: 'Georgia',
+      color: 'darkBlue',
+    },
     subtitle: { fontSize: 24, fontWeight: 'bold', fontFamily: 'Georgia', color: 'darkBlue' },
     extra_large: {
       fontSize: 48,

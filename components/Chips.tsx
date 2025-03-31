@@ -1,4 +1,4 @@
-import { IconDefinition, IconProp } from '@fortawesome/fontawesome-svg-core';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Box, Text, theme, Theme } from 'theme';
 
@@ -11,15 +11,21 @@ type ChipsProps = {
 export const Chips = ({ label, color = 'green', icon }: ChipsProps) => {
   return (
     <Box
+      flexDirection="row"
+      alignItems="center"
       borderRadius="base"
       paddingHorizontal="sm_12"
       paddingVertical="xs_4"
-      backgroundColor={color}>
-        {icon !== undefined && (
-          <FontAwesomeIcon icon={icon} color={theme.colors[color]} size={16} />
-        )}
-        <FontAwesomeIcon color={theme.colors[color]} size={16} icon={'function'} />
-      <Text variant="smallB">{label}</Text>
+      backgroundColor="orange">
+      {icon !== undefined && (
+        <FontAwesomeIcon 
+          icon={icon} 
+          color={theme.colors[color]} 
+          size={16}
+          style={{ marginRight: 8 }}
+        />
+      )}
+      <Text variant="smallB" color={color}>{label}</Text>
     </Box>
   );
-}
+};

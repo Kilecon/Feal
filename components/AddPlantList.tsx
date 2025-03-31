@@ -1,61 +1,44 @@
-import axios from 'axios';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image } from 'react-native';
 
 import { SearchBar } from '~/components/SearchBar';
-import { mcPlants } from '~/data/mock';
+import { fetchPlantList, Plant } from '~/lib/api';
 import { Box, Text, useTheme } from '~/theme';
-import { ApiResponse, Plant } from '~/types/api';
-
-const API_URL = `${process.env.API_URL}?key=${process.env.API_KEY}`;
-
-// const API_KEY = 'sk-62ux67ea51627720a9525'; // Replace with a secure storage method
-// const BASE_URL = `https://perenual.com/api/v2/species-list?key=${API_KEY}`;
 
 export const AddPlantList = () => {
   const theme = useTheme();
-  const [data, setData] = useState<Plant[]>([]);
   const [page, setPage] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [totalResults, setTotalResults] = useState<number>(0);
+  const [previousPage, setPreviousPage] = useState(1);
   const [query, setQuery] = useState<string>('');
+  const [plantList, setPlantList] = useState<Plant[]>([]);
 
-  useEffect(() => {
-    const timeoutId = setTimeout(async () => {
-      //await fetchData(page === 1);
-
-      setData(mcPlants);
-
-      setPage(1);
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  }, [query, page]);
-
-  const fetchData = async (reset = false) => {
-    if (loading || (totalResults > 0 && page > Math.ceil(totalResults / 30))) {
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await axios.get<ApiResponse>(`${API_URL}&q=${query}&page=${page}`);
-      const newData = response.data.data || [];
-      setData((prevData) => (reset ? newData : [...prevData, ...newData]));
-      setTotalResults(response.data.total || 0);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { isPending, error, data } = useQuery({
+    queryKey: ['plantList', query, page],
+    queryFn: async () => fetchPlantList(query, page),
+    placeholderData: keepPreviousData,
+  });
 
   const loadMore = () => {
-    if (!loading) {
+    if (!isPending) {
+      if (data && page === data.last_page) {
+        return;
+      }
       setPage((prevPage) => prevPage + 1);
     }
   };
+
+  useEffect(() => {
+    if (previousPage !== page) {
+      setPlantList((previous) => [...previous, ...(data?.data ?? [])]);
+      setPreviousPage(page);
+      return;
+    }
+    setPage(1);
+    setPlantList(data?.data ?? []);
+  }, [data]);
+
   return (
     <LinearGradient
       colors={[theme.colors.darkGreen, `${theme.colors.darkGreen}50`]}
@@ -70,44 +53,54 @@ export const AddPlantList = () => {
       }}>
       <SearchBar placeholder="Search a plant" onSearchChange={setQuery} />
 
-      <Text variant="smallSB" color="bgInput" paddingHorizontal="sm_12">
-        {totalResults} Results
-      </Text>
+      {error ? (
+        <Box flexDirection="row" justifyContent="center" alignItems="center" padding="ml_24">
+          <Text>Network error</Text>
+        </Box>
+      ) : (
+        <>
+          <Text variant="smallSB" color="bgInput" paddingHorizontal="sm_12">
+            {data?.total} Results
+          </Text>
 
-      <FlatList
-        data={data}
-        numColumns={2}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={{ gap: theme.spacing.ml_24 }}
-        columnWrapperStyle={{ gap: theme.spacing.m_16 }}
-        renderItem={({ item }) => (
-          <Box
-            padding="m_16"
-            gap="s_8"
-            backgroundColor="white"
-            borderRadius="medium"
-            style={{ alignSelf: 'flex-start' }}
-            flex={1}>
-            <Image
-              source={{
-                uri: item.default_image?.medium_url,
-              }}
-              style={{
-                resizeMode: 'contain',
-                height: 135,
-                width: 135,
-                alignSelf: 'center',
-              }}
-            />
-            <Text color="darkBlue" variant="mediumSB">
-              {item.common_name || 'Unknown'}
-            </Text>
-          </Box>
-        )}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={loading ? <ActivityIndicator size="large" color="blue" /> : null}
-      />
+          <FlatList
+            data={plantList}
+            numColumns={2}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={{ gap: theme.spacing.ml_24 }}
+            columnWrapperStyle={{ gap: theme.spacing.m_16 }}
+            renderItem={({ item }) => (
+              <Box
+                padding="m_16"
+                gap="s_8"
+                backgroundColor="white"
+                borderRadius="medium"
+                style={{ alignSelf: 'flex-start' }}
+                flex={1}>
+                <Image
+                  source={{
+                    uri: `${process.env.EXPO_PUBLIC_IMAGES_SRC}all_${item.common_name!.split(' ')[item.common_name!.split(' ').length - 1].toLowerCase()}.png?raw=true`,
+                  }}
+                  style={{
+                    resizeMode: 'contain',
+                    height: 135,
+                    width: 135,
+                    alignSelf: 'center',
+                  }}
+                />
+                <Text color="darkBlue" variant="mediumSB">
+                  {item.common_name || 'Unknown'}
+                </Text>
+              </Box>
+            )}
+            onEndReached={loadMore}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={
+              isPending ? <ActivityIndicator size="large" color="green" /> : null
+            }
+          />
+        </>
+      )}
     </LinearGradient>
   );
 };

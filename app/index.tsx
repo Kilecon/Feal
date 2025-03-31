@@ -7,13 +7,11 @@ import { theme } from '~/theme';
 
 export default function Home() {
   const [isOnboarded] = useStorage('isOnboarded');
-  if (!isOnboarded) {
-    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
-        <Stack.Screen options={{ title: 'Home', headerShown: false }} />
-        <Onboarding />
-      </SafeAreaView>
-    );
-  }
-  return <Redirect href="/home" />;
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <Stack.Screen options={{ title: 'Home', headerShown: false }} />
+      {isOnboarded ? <Onboarding /> : <Redirect href="/home" />}
+    </SafeAreaView>
+  );
 }

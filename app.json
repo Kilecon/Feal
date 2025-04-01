@@ -30,15 +30,6 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
-    },
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "0d683a80-84c1-4310-95bd-82766bd0b8f6"
-      }
-    },
-    "owner": "kileconynov"
+    }
   }
 }

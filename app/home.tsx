@@ -1,3 +1,4 @@
+import database from '@react-native-firebase/database';
 import { Stack } from 'expo-router';
 import React from 'react';
 
@@ -5,7 +6,6 @@ import { AddPlantList } from '~/components/AddPlantList';
 import { DetailsPlantList } from '~/components/DetailsPlantList';
 import { SectionTitle } from '~/components/SectionTitle';
 import { Box, Text } from '~/theme';
-import database from '@react-native-firebase/database';
 
 export default function Home() {
   database()

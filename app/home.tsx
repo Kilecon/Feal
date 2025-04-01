@@ -5,8 +5,16 @@ import { AddPlantList } from '~/components/AddPlantList';
 import { DetailsPlantList } from '~/components/DetailsPlantList';
 import { SectionTitle } from '~/components/SectionTitle';
 import { Box, Text } from '~/theme';
+import database from '@react-native-firebase/database';
 
 export default function Home() {
+  database()
+    .ref('/0000')
+    .once('value')
+    .then((snapshot) => {
+      console.log('User data: ', snapshot.val());
+    });
+
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />

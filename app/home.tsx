@@ -1,4 +1,3 @@
-import database from '@react-native-firebase/database';
 import { Stack } from 'expo-router';
 import React from 'react';
 
@@ -8,13 +7,6 @@ import { SectionTitle } from '~/components/SectionTitle';
 import { Box, Text } from '~/theme';
 
 export default function Home() {
-  database()
-    .ref('/0000')
-    .once('value')
-    .then((snapshot) => {
-      console.log('User data: ', snapshot.val());
-    });
-
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />

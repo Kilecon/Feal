@@ -1,4 +1,3 @@
-import { faDroplet, faSun } from '@fortawesome/free-solid-svg-icons';
 import { useQuery } from '@tanstack/react-query';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
@@ -8,13 +7,13 @@ import uuid from 'react-native-uuid';
 import { Button } from '~/components/Button';
 import { ChipsList, ChipsTipsKeys } from '~/components/ChipsList';
 import { Header } from '~/components/Header';
-import { InformationCard } from '~/components/InformationCard';
 import GradientBackground from '~/components/radiasBackground';
 import useStorage from '~/core/storage';
 import { fetchPlant } from '~/lib/api';
 import { Box, Text, theme } from '~/theme';
 import { Plant } from '~/types/api.type';
 import { LocalPlant } from '~/types/storage.type';
+import { PlantHealth } from '~/components/PlantHealth';
 
 export default function Detail() {
   const params = useLocalSearchParams();
@@ -23,7 +22,7 @@ export default function Detail() {
   const [localPlants, setLocalPlants] = useStorage<LocalPlant[]>('localPlants');
   const localPlant = localPlants?.find((p) => p.id === localId);
 
-  const { isPending, error, data } = useQuery({
+  let { isPending, error, data } = useQuery({
     queryKey: ['plantDetails'],
     queryFn: async () => fetchPlant(parseInt(plantId as string, 10)),
   });
@@ -45,7 +44,24 @@ export default function Detail() {
   }
 
   if (error) {
-    return null;
+    // return null;
+    data = {
+      cuisine: false,
+      description: 'rezrz',
+      edible_fruit: false,
+      edible_leaf: false,
+      flowers: false,
+      fruits: false,
+      id: 0,
+      indoor: false,
+      invasive: false,
+      medicinal: false,
+      poisonous_to_humans: false,
+      poisonous_to_pets: false,
+      rare: false,
+      tropical: false,
+      common_name: 'beech',
+    };
   }
 
   return (
@@ -76,21 +92,7 @@ export default function Detail() {
               paddingVertical="l_32"
               paddingHorizontal="ml_24"
               alignItems="center">
-              {localPlant && (
-                <Box flexDirection="column" alignItems="center" gap="s_8">
-                  <Box flexDirection="row">
-                    <InformationCard
-                      label="Humidity"
-                      color="green"
-                      icon={faDroplet}
-                      pourcent={72}
-                    />
-                  </Box>
-                  <Box style={{ width: '100%' }}>
-                    <InformationCard label="Light" color="orange" icon={faSun} pourcent={10} />
-                  </Box>
-                </Box>
-              )}
+              {localPlant && <PlantHealth id={localPlant.firebase_id} />}
               {!localPlant && (
                 <Button
                   label="Save"
@@ -99,8 +101,9 @@ export default function Detail() {
                       ...(localPlants ?? []),
                       {
                         id: uuid.v4(),
-                        api_id: data?.id,
+                        api_id: data!.id,
                         name: data?.common_name ?? '',
+                        firebase_id: '0000',
                       },
                     ]);
                     if (router.canGoBack()) router.back();

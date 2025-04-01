@@ -1,16 +1,16 @@
 import database from '@react-native-firebase/database';
 
 export const fetchPlantHealth = async (id: string): Promise<{ sun: number; humidity: number }> => {
-  const plantHealth = { sun: 0, humidity: 0 };
+  const snapshot = await database().ref(`/${id}`).once('value');
 
-  database()
-    .ref(`/${id}`)
-    .once('value')
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        plantHealth.sun = snapshot.val()['sun'];
-        plantHealth.humidity = snapshot.val()['humidity'];
-      }
-    });
-  return plantHealth;
+  if (snapshot.exists()) {
+    const val = snapshot.val();
+
+    return {
+      sun: parseFloat(val.sun ?? 0),
+      humidity: parseFloat(val.humidity ?? 0),
+    };
+  }
+
+  return { sun: 0, humidity: 0 };
 };

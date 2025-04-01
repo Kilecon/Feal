@@ -1,23 +1,28 @@
-import { Box } from 'theme';
-import { InformationCard } from '~/components/InformationCard';
 import { faDroplet, faSun } from '@fortawesome/free-solid-svg-icons';
-import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchPlantHealth } from '~/lib/firebase';
+import React from 'react';
 import { ActivityIndicator } from 'react-native';
+import { Box } from 'theme';
+
+import { InformationCard } from '~/components/InformationCard';
+import { fetchPlantHealth } from '~/lib/firebase';
 
 type PlantHealthProps = {
   id: string;
 };
 
 export const PlantHealth = ({ id }: PlantHealthProps) => {
-  let { isPending, error, data } = useQuery({
-    queryKey: ['plantHealth'],
+  const { isPending, error, data } = useQuery({
+    queryKey: ['plantHealth', id],
     queryFn: async () => fetchPlantHealth(id),
   });
 
   if (isPending) {
     return <ActivityIndicator size="large" color="green" />;
+  }
+
+  if (error) {
+    return null;
   }
 
   return (
@@ -27,11 +32,11 @@ export const PlantHealth = ({ id }: PlantHealthProps) => {
           label="Humidity"
           color="green"
           icon={faDroplet}
-          pourcent={data!.humidity}
+          pourcent={data?.humidity}
         />
       </Box>
       <Box style={{ width: '100%' }}>
-        <InformationCard label="Light" color="orange" icon={faSun} pourcent={data!.sun} />
+        <InformationCard label="Light" color="orange" icon={faSun} pourcent={data?.sun} />
       </Box>
     </Box>
   );

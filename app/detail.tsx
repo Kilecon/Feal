@@ -24,7 +24,7 @@ export default function Detail() {
   const localPlant = localPlants?.find((p) => p.id === localId);
 
   let { isPending, error, data } = useQuery({
-    queryKey: ['plantDetails'],
+    queryKey: ['plantDetails', plantId],
     queryFn: async () => fetchPlant(parseInt(plantId as string, 10)),
   });
   const router = useRouter();
@@ -96,24 +96,7 @@ export default function Detail() {
   }
 
   if (error) {
-    // return null;
-    data = {
-      cuisine: false,
-      description: 'rezrz',
-      edible_fruit: false,
-      edible_leaf: false,
-      flowers: false,
-      fruits: false,
-      id: 0,
-      indoor: false,
-      invasive: false,
-      medicinal: false,
-      poisonous_to_humans: false,
-      poisonous_to_pets: false,
-      rare: false,
-      tropical: false,
-      common_name: 'beech',
-    };
+    return null;
   }
 
   return (
@@ -148,8 +131,8 @@ export default function Detail() {
               {!localPlant && (
                 <Button
                   label="Save"
-                  onPress={() => {
-                    setLocalPlants([
+                  onPress={async () => {
+                    await setLocalPlants([
                       ...(localPlants ?? []),
                       {
                         id: uuid.v4(),

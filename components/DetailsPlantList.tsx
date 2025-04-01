@@ -1,21 +1,33 @@
 import React from 'react';
+import { ScrollView } from 'react-native';
+
+import { DetailsCard } from '~/components/DetailsCard';
+import useStorage from '~/core/storage';
 import { Box, Text } from '~/theme';
+import { LocalPlant } from '~/types/storage.type';
 
 export const DetailsPlantList = () => {
-  return (
-    <Box flexDirection="row" justifyContent="center" alignItems="center" padding="ml_24">
-      <Text>No plants saved</Text>
-    </Box>
+  const [localPlants] = useStorage<LocalPlant[]>('localPlants');
 
-    // <ScrollView
-    //   horizontal
-    //   showsHorizontalScrollIndicator={false}
-    //   contentContainerStyle={{
-    //     gap: 15,
-    //     paddingTop: 36,
-    //   }}>
-    //   <DetailsCard plant={{ name: 'test', id: 'idplant' }} />
-    //   <DetailsCard plant={{ name: 'test', id: 'idplant' }} />
-    // </ScrollView>
+  if (!localPlants?.length) {
+    return (
+      <Box flexDirection="row" justifyContent="center" alignItems="center" padding="ml_24">
+        <Text>No plants saved</Text>
+      </Box>
+    );
+  }
+
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{
+        gap: 15,
+        paddingTop: 36,
+      }}>
+      {localPlants.map((plant: LocalPlant) => (
+        <DetailsCard localPlant={plant} key={plant.id} />
+      ))}
+    </ScrollView>
   );
 };

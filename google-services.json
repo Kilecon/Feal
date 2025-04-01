@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "290899904718",
+    "firebase_url": "https://feal-678f6-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "feal-678f6",
+    "storage_bucket": "feal-678f6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290899904718:android:9a061e3c8943014645689f",
+        "android_client_info": {
+          "package_name": "com.mobile.feal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqq9OmtymYsM_7_g2Vdqu-stF6kn89k4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

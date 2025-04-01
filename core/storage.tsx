@@ -1,32 +1,62 @@
-import Storage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import EventEmitter from 'eventemitter3';
 import { useEffect, useState } from 'react';
 
-export const useStorage = (key: string) => {
-  const [value, setValue] = useState<string | null>(null);
+const storageEmitter = new EventEmitter();
 
-  const setItem = async (value: string) => {
+export function useStorage<T = string>(key: string) {
+  const [value, setValue] = useState<T | null>(null);
+
+  const setItem = async (newValue: T) => {
     try {
-      await Storage.setItem(key, value);
-      setValue(value);
+      const jsonValue = JSON.stringify(newValue);
+      await AsyncStorage.setItem(key, jsonValue);
+      setValue(newValue);
+      storageEmitter.emit(key, newValue);
     } catch (error) {
-      console.error(error);
+      console.error(`Erreur lors de l'enregistrement de ${key} :`, error);
     }
   };
 
   const getItem = async () => {
     try {
-      const value = await Storage.getItem(key);
-      setValue(value);
+      const jsonValue = await AsyncStorage.getItem(key);
+      if (jsonValue !== null) {
+        setValue(JSON.parse(jsonValue));
+      } else {
+        setValue(null);
+      }
     } catch (error) {
-      console.error(error);
+      console.error(`Erreur lors de la lecture de ${key} :`, error);
+    }
+  };
+
+  const removeItem = async () => {
+    try {
+      await AsyncStorage.removeItem(key);
+      setValue(null);
+      storageEmitter.emit(key, null);
+    } catch (error) {
+      console.error(`Erreur lors de la suppression de ${key} :`, error);
     }
   };
 
   useEffect(() => {
     getItem();
-  }, []);
+    // AsyncStorage.clear();
 
-  return [value, setItem] as const;
-};
+    const listener = (newValue: T | null) => {
+      setValue(newValue);
+    };
 
-export default Storage;
+    storageEmitter.addListener(key, listener);
+
+    return () => {
+      storageEmitter.removeListener(key, listener);
+    };
+  }, [key]);
+
+  return [value, setItem, removeItem] as const;
+}
+
+export default useStorage;

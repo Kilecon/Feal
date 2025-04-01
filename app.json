@@ -10,7 +10,9 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "@react-native-firebase/app",
+      "expo-router",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -23,22 +25,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "bundleIdentifier": "com.mobile.feal"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
+      "package": "com.mobile.feal",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       }
-    },
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "0d683a80-84c1-4310-95bd-82766bd0b8f6"
-      }
-    },
-    "owner": "kileconynov"
+    }
   }
 }

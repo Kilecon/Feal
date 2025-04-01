@@ -43,6 +43,7 @@ export function useStorage<T = string>(key: string) {
 
   useEffect(() => {
     getItem();
+    // AsyncStorage.clear();
 
     const listener = (newValue: T | null) => {
       setValue(newValue);

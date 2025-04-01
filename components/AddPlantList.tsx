@@ -8,6 +8,7 @@ import { fetchPlantList } from '~/lib/api';
 import { Box, Text, useTheme } from '~/theme';
 import { useRouter } from 'expo-router';
 import { Plant } from '~/types/api.type';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 export const AddPlantList = () => {
   const theme = useTheme();
@@ -42,6 +43,41 @@ export const AddPlantList = () => {
     setPage(1);
     setPlantList(data?.data ?? []);
   }, [data]);
+
+  if (isPending) {
+    return (
+      <LinearGradient
+        colors={[theme.colors.darkGreen, `${theme.colors.darkGreen}50`]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0.2, y: 1 }}
+        style={{
+          gap: theme.spacing.m_16,
+          borderTopLeftRadius: theme.borderRadii.base,
+          borderTopRightRadius: theme.borderRadii.base,
+          padding: 16,
+          flex: 1,
+        }}>
+        <SearchBar placeholder="Search a plant" onSearchChange={setQuery} />
+
+        <SkeletonPlaceholder>
+          <SkeletonPlaceholder.Item
+            flexDirection="row"
+            justifyContent="space-between"
+            flexWrap="wrap">
+            {[...Array(6)].map((_, i) => (
+              <SkeletonPlaceholder.Item
+                key={i}
+                width="48%"
+                height={200}
+                borderRadius={16}
+                marginBottom={16}
+              />
+            ))}
+          </SkeletonPlaceholder.Item>
+        </SkeletonPlaceholder>
+      </LinearGradient>
+    );
+  }
 
   return (
     <LinearGradient

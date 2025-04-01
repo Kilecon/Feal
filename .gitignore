@@ -13,6 +13,9 @@ web-build/
 # expo router
 expo-env.d.ts
 
+google-services.json
+GoogleService-Info.plist
+
 .idea/
 
 ios

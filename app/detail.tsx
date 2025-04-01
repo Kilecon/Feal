@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { ActivityIndicator, Image, SafeAreaView, ScrollView } from 'react-native';
+import { Image, SafeAreaView, ScrollView } from 'react-native';
 import uuid from 'react-native-uuid';
 
 import { Button } from '~/components/Button';
@@ -14,6 +14,7 @@ import { Box, Text, theme } from '~/theme';
 import { Plant } from '~/types/api.type';
 import { LocalPlant } from '~/types/storage.type';
 import { PlantHealth } from '~/components/PlantHealth';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 export default function Detail() {
   const params = useLocalSearchParams();
@@ -37,7 +38,58 @@ export default function Detail() {
             backgroundColor: theme.colors.background,
             flex: 1,
           }}>
-          <ActivityIndicator size="large" color="green" />
+          <Box paddingVertical="sm_12">
+            <Header title="Plant detail" canGoBack />
+          </Box>
+          <GradientBackground />
+          <ScrollView>
+            <Box
+              flexDirection="column"
+              flex={1}
+              justifyContent="space-between"
+              paddingHorizontal="l_32"
+              paddingTop="m_16">
+              <SkeletonPlaceholder>
+                <SkeletonPlaceholder.Item
+                  alignSelf="center"
+                  width="70%"
+                  height={32}
+                  borderRadius={20}
+                />
+              </SkeletonPlaceholder>
+              <Box
+                height={400}
+                flexDirection="row"
+                paddingVertical="l_32"
+                paddingHorizontal="ml_24"
+                alignItems="center">
+                <SkeletonPlaceholder>
+                  <SkeletonPlaceholder.Item width={90} height={220} borderRadius={20} />
+                </SkeletonPlaceholder>
+              </Box>
+
+              <Box gap="sm_12">
+                <Text variant="subtitle">Tips for your plant</Text>
+                <SkeletonPlaceholder>
+                  <SkeletonPlaceholder.Item flexDirection="row" flexWrap="wrap" gap={8}>
+                    {[...Array(3)].map((_, i) => (
+                      <SkeletonPlaceholder.Item
+                        key={i}
+                        width={92}
+                        height={32}
+                        borderRadius={16}
+                        marginBottom={16}
+                      />
+                    ))}
+                  </SkeletonPlaceholder.Item>
+                </SkeletonPlaceholder>
+
+                <SkeletonPlaceholder>
+                  <SkeletonPlaceholder.Item height={130} borderRadius={20} />
+                </SkeletonPlaceholder>
+              </Box>
+            </Box>
+          </ScrollView>
         </SafeAreaView>
       </>
     );
